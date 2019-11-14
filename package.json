@@ -1,0 +1,22 @@
+{
+  "name": "apollo-local-state-talk",
+  "version": "1.0.0",
+  "description": "A slideshow for my GraphQL Meetup Talk, build in MDX Deck",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aleccool213/apollo-local-state-talk.git"
+  },
+  "author": "Alec Brunelle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aleccool213/apollo-local-state-talk/issues"
+  },
+  "homepage": "https://github.com/aleccool213/apollo-local-state-talk#readme",
+  "devDependencies": {
+    "mdx-deck": "^3.0.13"
+  }
+}
