@@ -1,0 +1,225 @@
+import { future, prism } from "mdx-deck/themes";
+import { Appear } from "mdx-deck";
+import { Notes } from 'mdx-deck'
+
+export const themes = [prism];
+
+# Intro
+
+### Alec Brunelle
+
+### Work with Javascript and GraphQL everyday
+
+### Work for Yolk AI
+
+<Appear>
+  <h3>For Better</h3>
+  <h3>... or Worse</h3>
+</Appear>
+
+<Notes>
+
+- Only visible in presenter mode
+- Markdown syntax can be used with empty lines around the content
+
+</Notes>
+
+---
+
+# state management in js is hard
+
+<Notes>
+
+- many many solutions
+- redux, react state/context, flux
+- apollo local state is one of those solutions
+
+</Notes>
+
+---
+
+# why state management in the frontend is needed at all?
+
+---
+
+# hasn't this been solved with other libs like react context and redux?
+
+* yes
+  * if using it already and loving it, no reason to switch
+  * if adopting graphql, then seriously consider switching
+
+---
+
+# apollo local state to the rescue!
+
+<Appear>
+    <h1>Sort of...</h1>
+</Appear>
+
+---
+
+# Pros
+
+- [considerably less code than in redux](https://blog.apollographql.com/reducing-our-redux-code-with-react-apollo-5091b9de9c2a)
+- components only ask for the data they need
+- entire data graph is strongly-typed
+    - not like this in redux, you have to recreate it yourself
+    - The data models and store structure can be shared between the data fetching cache and the local state management cache
+- very easy to adopt if using apollo client already
+    - if already using graphql yes, already using apollo client, yes x 100
+        - almost zero extra config if already using apollo client
+    - Actions are performed with mutations, something that previous GraphQL users already understand
+    - Staying within the Apollo ecosystem meant smooth integration with existing tools, meaning less overhead for developers.
+    - funded project (apollo) means docs, support and plenty of eyes on the projects
+
+---
+
+# Cons
+
+- making many many mutations sucks super hard
+- show boilerplate heavy mutation
+- needed something better
+
+---
+
+This component renders an input which allows a user to rename a Github issue.
+
+```jsx
+import React from "react";
+
+const IssueContainer: React.FC<{ issue: GithubIssue }> = ({ issue }) => {
+    const updateIssuename = useMutation(UPDATE_ISSUE_NAME);
+    return <input
+        onChange={name => {
+            updateIssuename({
+                variables: {
+                    input: {
+                        id: issue.id,
+                        name
+                    }
+                }
+            });
+        }}
+    />
+};
+```
+
+---
+
+And the mutation definition:
+
+```typescript
+import gql from 'graphql-tag';
+import { IFieldResolver } from 'graphql-tools';
+import { Mutation } from 'react-apollo';
+
+import { ISSUE_PARTS as issueQueryFragments } from '../flows';
+import { IssueStepParts, UpdateIssuename, UpdateIssueNameVariables } from '../../graphql-types';
+import { ResolverContext } from '.';
+
+export const QUERY = gql`
+  mutation UpdateIssueName($input: UpdateIssueNameInput!) {
+    pdateIssueName(input: $input) @client
+  }
+`;
+
+export class UpdateIssueNameMutation extends Mutation<UpdateIssueName, UpdateIssueNameVariables> {}
+
+const updateIssuename: IFieldResolver<void, ResolverContext, any> = (
+  _obj,
+  args: UpdateIssueNameVariables,
+  context,
+) => {
+  const { input } = args;
+  const { cache, getCacheKey } = context;
+
+    // 1. Get the id of the object in the cache using the actual issue id
+  const id = getCacheKey({ __typename: 'Issue', id: input.id });
+  const fragment = gql`
+    ${issueQueryFragments}
+    fragment IssueParts on Issue {
+      id
+      name
+    }
+  `;
+    // 2. Get the data from the cache
+  const step: IssueParts | null = cache.readFragment({
+    fragment,
+    fragmentName: 'IssueParts',
+    id,
+  });
+  if (!issue) {
+    return null;
+  }
+
+  // 3. Update the data locally
+  const updateIssue = {
+    ...issue,
+    name: input.name,
+  };
+
+  // 4. Write the data back to the cache
+  cache.writeFragment({
+    fragment,
+    fragmentName: 'IssueParts',
+    id,
+    data: updatedStep,
+  });
+  return null;
+};
+
+export default updateIssuename;
+```
+
+---
+
+You can see why writing many of these would become a problem.
+
+
+---
+
+# Needed to fix it
+
+* The pros were just TOO good to give up
+
+---
+
+Let's take our inspiration from Redux.
+
+- this resulted in us making many many mutations
+- lots of boilerplate and testing was not easy, very terse and prone to error
+- way too much code for such small manipulations to data
+- we need something better
+- this was not as bad in redux
+- why though?
+
+---
+
+whats the solution to this?
+
+* show new createResolver in action
+
+---
+
+
+
+---
+
+[Hugh Wilson of the Apollo team has said they are looking to improve it.](https://spectrum.chat/apollo/apollo-link-state/apollo-link-state-vs-redux-vs-react-hooks-context~dcb1118c-8819-4593-8b22-040229ed4282?m=MTU1MTM3ODkzNjcxNg==)
+
+
+Maybe one day I'll make a pr to get this sort of feature in who knows.
+
+---
+
+# If you liked this:
+
+## https://blog.alec.coffee/apollo-local-state-pains/
+
+---
+
+# Follow Me:
+
+## [@yourboybigal](https://twitter.com/yourboybigal)
+
+## [alec@alec.coffee](mailto:alec@alec.coffee)
