@@ -1,16 +1,22 @@
-import { future, prism } from "mdx-deck/themes";
-import { Appear } from "mdx-deck";
-import { Notes } from 'mdx-deck'
+import { Appear, Notes, Split } from "mdx-deck";
+import {
+  CodeSurfer,
+  Step
+} from "code-surfer";
 
-export const themes = [prism];
+import { github, vsDark } from "@code-surfer/themes";
+
+export const theme = vsDark;
 
 # Intro
 
 ### Alec Brunelle
 
-### Work with Javascript and GraphQL everyday
+### Software dev @ Yolk AI
 
-### Work for Yolk AI
+---
+
+<h3>Everything in Javascript</h3>
 
 <Appear>
   <h3>For Better</h3>
@@ -19,14 +25,37 @@ export const themes = [prism];
 
 <Notes>
 
-- Only visible in presenter mode
-- Markdown syntax can be used with empty lines around the content
+- backend, frontend
+- 
 
 </Notes>
 
 ---
 
-# state management in js is hard
+<h3>Everything in GraphQL</h3>
+
+<Appear>
+  <h3>For Better</h3>
+  <h3>... and Better</h3>
+</Appear>
+
+<Notes>
+
+- really love it
+- passionate about it
+- very excited and feel lucky to work on it everyday
+
+</Notes>
+
+---
+
+Frontend developer for three years
+
+Apollo Client for almost a year
+
+---
+
+# state management is hard
 
 <Notes>
 
@@ -38,15 +67,52 @@ export const themes = [prism];
 
 ---
 
-# why state management in the frontend is needed at all?
+insert table flip image
+
+<Notes>
+
+- You may have felt like this at one point when going through state management in js
+- you always get this thought in the back of your mind that it should somehow be easier
+
+</Notes>
 
 ---
 
-# hasn't this been solved with other libs like react context and redux?
+# why is it needed?
+
+<Notes>
+
+- you hear frontend developers always talking about it
+
+</Notes>
+
+---
+
+insert image of very complicated frontend
+
+<Notes>
+
+- complex SPA's require a user to perform many actions before talking with the API or network
+    - e.g. a flow editor (it was ours in that case), a multi-page form,
+- can use React State for a lot of interactions
+- doesnt scale well, starts to break down when multiple components need to hold state
+
+</Notes>
+
+---
+
+# hasn't this been solved already?
+
+<Notes>
 
 * yes
+  * many solutions like redux and flux
   * if using it already and loving it, no reason to switch
   * if adopting graphql, then seriously consider switching
+* no
+  * going to be duplicating a lot of work if already working with graphql
+
+</Notes>
 
 ---
 
@@ -56,152 +122,329 @@ export const themes = [prism];
     <h1>Sort of...</h1>
 </Appear>
 
----
-
-# Pros
-
-- [considerably less code than in redux](https://blog.apollographql.com/reducing-our-redux-code-with-react-apollo-5091b9de9c2a)
-- components only ask for the data they need
-- entire data graph is strongly-typed
-    - not like this in redux, you have to recreate it yourself
-    - The data models and store structure can be shared between the data fetching cache and the local state management cache
-- very easy to adopt if using apollo client already
-    - if already using graphql yes, already using apollo client, yes x 100
-        - almost zero extra config if already using apollo client
-    - Actions are performed with mutations, something that previous GraphQL users already understand
-    - Staying within the Apollo ecosystem meant smooth integration with existing tools, meaning less overhead for developers.
-    - funded project (apollo) means docs, support and plenty of eyes on the projects
-
----
-
-# Cons
+<Notes>
 
 - making many many mutations sucks super hard
 - show boilerplate heavy mutation
 - needed something better
 
+</Notes>
+
 ---
 
-This component renders an input which allows a user to rename a Github issue.
+# Pro
 
-```jsx
+It's GraphQL
+
+<Notes>
+
+pro:
+
+* All the benefits of GraphQL
+  * strongly typed data model
+* very easy to adopt for apollo client users
+  * judging by stats, probably lots of you
+- Actions are performed with mutations, something that previous GraphQL users already understand
+
+</Notes>
+
+---
+
+# Pro
+
+Apollo
+
+<Notes>
+
+-  almost zero extra config if already using apollo client
+- Staying within the Apollo ecosystem meant smooth integration with existing tools, meaning less overhead for developers.
+
+</Notes>
+
+---
+
+# Pro
+
+Queries
+
+<Notes>
+
+* components only ask for the data they need
+  * queries!
+
+</Notes>
+
+---
+
+# Pro
+
+A lot less code
+
+<Notes>
+
+* store structure shared between data fetching cache and local state cache
+  * [a lot less work for you](https://blog.apollographql.com/reducing-our-redux-code-with-react-apollo-5091b9de9c2a)
+
+</Notes>
+
+---
+
+# Pro
+
+Funded 💰
+
+<Notes>
+
+funded project (apollo) means docs, support and plenty of eyes on the projects
+
+</Notes>
+
+---
+
+# Con
+
+Quantity of Mutations
+
+<Notes>
+
+- making many many mutations sucks super hard
+- show boilerplate heavy mutation
+
+</Notes>
+
+---
+
+# Con
+
+Usage
+
+<Notes>
+
+- wont find a lot of stack over flow questions
+- maybe thats because it uses so much of apollo cache already?
+
+</Notes>
+
+
+---
+
+# Con
+
+Boilerplate / Dev Experience
+
+<Notes>
+
+- could be much better
+- part of the reason why I am giving this talk
+- want it to get better as I had such a good experience
+
+</Notes>
+
+---
+
+pattern
+
+<Notes>
+
+* ideally you want to make your actions one-to-one with user actions
+* Easy to reason
+* Makes them small
+
+</Notes>
+
+---
+
+Actions are 1-1 with user interactions
+
+---
+
+<CodeSurfer>
+
+```graphql title="Define client-side schema"
+# clientOnly.graphql
+
+extend type Mutation {
+  # A mutation which edits the name on a Github Issue.
+  editGithubIssue(input: EditGithubIssueInput!): Boolean
+}
+
+input EditGithubIssueInput {
+  id: ID!
+  name: String!
+}
+```
+
+```jsx 7:10 title="Define the fragment"
 import React from "react";
 
-const IssueContainer: React.FC<{ issue: GithubIssue }> = ({ issue }) => {
-    const updateIssuename = useMutation(UPDATE_ISSUE_NAME);
-    return <input
-        onChange={name => {
-            updateIssuename({
-                variables: {
-                    input: {
-                        id: issue.id,
-                        name
-                    }
-                }
-            });
-        }}
+import { GithubIssuePiece } from './graphql-types'
+import { UPDATE_ISSUE_NAME } from './mutations/updateIssuename';
+
+const GITHUB_ISSUE_FRAGMENT = gql`
+  fragment GithubIssuePiece on GithubIssue {
+    id @client
+    name @client
+  }
+`
+```
+
+```jsx 2,7:14 title="Use the mutation"
+const IssueInput: React.FC<{ issue: GithubIssuePiece }> = ({ issue }) => {
+  const updateIssuename = useMutation(UPDATE_ISSUE_NAME);
+  return (
+    <input
+      value={issue.name}
+      onChange={newInputValue => {
+        updateIssuename({
+          variables: {
+            input: {
+              id: issue.id,
+              name: newInputValue
+            }
+          }
+        });
+      }}
     />
+  );
 };
 ```
 
+</CodeSurfer>
+
+<Notes>
+
+
+</Notes>
+
 ---
 
-And the mutation definition:
+Same Apollo Client logic
 
-```typescript
-import gql from 'graphql-tag';
-import { IFieldResolver } from 'graphql-tools';
-import { Mutation } from 'react-apollo';
+Components will be updated
 
-import { ISSUE_PARTS as issueQueryFragments } from '../flows';
-import { IssueStepParts, UpdateIssuename, UpdateIssueNameVariables } from '../../graphql-types';
-import { ResolverContext } from '.';
+<Notes>
 
-export const QUERY = gql`
-  mutation UpdateIssueName($input: UpdateIssueNameInput!) {
-    pdateIssueName(input: $input) @client
-  }
-`;
 
-export class UpdateIssueNameMutation extends Mutation<UpdateIssueName, UpdateIssueNameVariables> {}
 
-const updateIssuename: IFieldResolver<void, ResolverContext, any> = (
-  _obj,
-  args: UpdateIssueNameVariables,
-  context,
-) => {
-  const { input } = args;
-  const { cache, getCacheKey } = context;
+</Notes>
 
-    // 1. Get the id of the object in the cache using the actual issue id
-  const id = getCacheKey({ __typename: 'Issue', id: input.id });
-  const fragment = gql`
-    ${issueQueryFragments}
-    fragment IssueParts on Issue {
-      id
-      name
-    }
-  `;
-    // 2. Get the data from the cache
-  const step: IssueParts | null = cache.readFragment({
-    fragment,
-    fragmentName: 'IssueParts',
-    id,
-  });
-  if (!issue) {
-    return null;
-  }
+---
 
-  // 3. Update the data locally
-  const updateIssue = {
-    ...issue,
-    name: input.name,
-  };
+Okay, but what about the mutation resolver definition?
 
-  // 4. Write the data back to the cache
-  cache.writeFragment({
-    fragment,
-    fragmentName: 'IssueParts',
-    id,
-    data: updatedStep,
-  });
-  return null;
-};
+---
 
-export default updateIssuename;
+
+<CodeSurfer>
+
+```ts file=./mutations/updateIssueName.ts subtitle="It's pretty big"
 ```
 
----
+```diff 11:15 subtitle="define local mutation"
+```
 
-You can see why writing many of these would become a problem.
+```diff 37:41 subtitle="Get the id of the object in the cache"
+```
 
+```diff 44:48 subtitle="Get the data from the cache"
+```
 
----
+```diff 54:57 subtitle="Update the data"
+```
 
-# Needed to fix it
+```diff 60:65 subtitle="Write the data to the cache"
+```
 
-* The pros were just TOO good to give up
+</CodeSurfer>
 
----
+<Notes>
 
-Let's take our inspiration from Redux.
+* Goes to show the dev experience here is lacking
+* this is how to do it, straight from the docs
+* Ts makes this worse but I havent wrote regular JS in almost two years
 
-- this resulted in us making many many mutations
-- lots of boilerplate and testing was not easy, very terse and prone to error
-- way too much code for such small manipulations to data
-- we need something better
-- this was not as bad in redux
-- why though?
-
----
-
-whats the solution to this?
-
-* show new createResolver in action
+</Notes>
 
 ---
 
+insert wut image
 
+---
+
+Problems
+
+* Boilerplate
+* Testing
+
+<Notes>
+
+* lots of boilerplate and testing was not easy, very terse and prone to error
+  * way too much code for such small manipulations to data
+* to test this you need a fake store and perform fake mutation on it
+* hard to test
+  * lots of use of external apis
+
+</Notes>
+
+---
+
+this was not as bad in redux
+
+why?
+
+---
+
+Let's take some inspiration
+
+* reducers are pure functions
+* always write data back in the same structure as you read it
+* already doing small actions
+
+---
+
+how can we apply this
+
+---
+
+we are only doing 4 things here:
+
+* Get the id
+* Get the data from the cache
+* Update the data locally
+* Write the data back to the cache
+
+---
+
+<CodeSurfer>
+
+```ts file=./common/createResolver.ts
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```ts title="Lets go back to our issue mutation" file=./mutations/newUpdateIssueName.ts
+```
+
+</CodeSurfer>
+
+---
+
+With this new set of utility function, it covered about 90% of our use cases.
+
+---
+
+recap
+
+* chose to invest heavily in apollo local state for a complicated flow editor - type app
+* saw problems in apollo local state which required tweaking
+* used inspiration from redux to make apollo local state experience much better
+  * was really just functional principles such as
+    * pure funcs
+    * reducer funcs
 
 ---
 
