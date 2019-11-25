@@ -3,10 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "description": "A slideshow for my GraphQL Meetup Talk, build in MDX Deck",
-  "main": "index.js",
+  "main": "./public/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "mdx-deck deck.mdx",
+    "dev": "mdx-deck deck.mdx",
     "build": "mdx-deck build deck.mdx"
   },
   "repository": {
