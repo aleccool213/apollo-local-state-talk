@@ -1,7 +1,7 @@
-import { Appear, Notes, Split } from "mdx-deck";
+import { Appear, Notes, Split, Image } from "mdx-deck";
 import {
   CodeSurfer,
-  Step
+  Step,
 } from "code-surfer";
 
 import { github, vsDark } from "@code-surfer/themes";
@@ -14,33 +14,22 @@ export const theme = vsDark;
 
 ### Software dev @ Yolk AI
 
----
-
-<h3>Everything in Javascript</h3>
-
-<Appear>
-  <h3>For Better</h3>
-  <h3>... or Worse</h3>
-</Appear>
-
 <Notes>
 
-- backend, frontend
-- 
+* i.t. automation, e.g. chatbot, intranet
 
 </Notes>
 
 ---
 
-<h3>Everything in GraphQL</h3>
+Frontend developer for three years
 
-<Appear>
-  <h3>For Better</h3>
-  <h3>... and Better</h3>
-</Appear>
+Apollo Local State for a year
 
 <Notes>
 
+- yolk ai all apps using it
+- been amazing
 - really love it
 - passionate about it
 - very excited and feel lucky to work on it everyday
@@ -49,84 +38,81 @@ export const theme = vsDark;
 
 ---
 
-Frontend developer for three years
-
-Apollo Client for almost a year
-
----
-
-# state management is hard
+<Image src="https://ludiq.io/assets/images/Flow-New.png" width="75%" height="75%" />
 
 <Notes>
 
-- many many solutions
-- redux, react state/context, flux
-- apollo local state is one of those solutions
-
-</Notes>
-
----
-
-insert table flip image
-
-<Notes>
-
-- You may have felt like this at one point when going through state management in js
-- you always get this thought in the back of your mind that it should somehow be easier
-
-</Notes>
-
----
-
-# why is it needed?
-
-<Notes>
-
-- you hear frontend developers always talking about it
-
-</Notes>
-
----
-
-insert image of very complicated frontend
-
-<Notes>
-
-- complex SPA's require a user to perform many actions before talking with the API or network
+- I am sure all you front end developers have seen this before
+- complex single page apps which have a combination of remote data and local data are a great candidate for ALS
     - e.g. a flow editor (it was ours in that case), a multi-page form,
+    - graphql api Data
+    - which nodes the user has edited, local data
+- difficult problem but many many solutions
+  - e.g. redux, react state/context, flux
+  - apollo local state is one of those solutions
+- today I am going to tell you my experience with apollo local state
+
+- TODO: maybe talk about react state
 - can use React State for a lot of interactions
 - doesnt scale well, starts to break down when multiple components need to hold state
+  * they need to know about each other
+
+* using ALS for a flow editor sort of like this
+  * invested heavily in it
 
 </Notes>
 
 ---
 
-# hasn't this been solved already?
+Apollo Client
+
+* Query and Mutate Remote Data
+* A Cache with different fetch policies
 
 <Notes>
 
-* yes
-  * many solutions like redux and flux
-  * if using it already and loving it, no reason to switch
-  * if adopting graphql, then seriously consider switching
-* no
-  * going to be duplicating a lot of work if already working with graphql
+- you are likely already usig graphql and also using apollo client if you are building a frontend
+- apollo client lets you query and mutate remote data on a graphql api
+- has a built-in cache which has enables some pretty awesome features
+  * e.g. blah blah blah
+* this is how apollo client gives you a lot of nice features like different fetch policies
 
 </Notes>
 
 ---
 
-# apollo local state to the rescue!
-
-<Appear>
-    <h1>Sort of...</h1>
-</Appear>
+Network Cache
 
 <Notes>
 
-- making many many mutations sucks super hard
-- show boilerplate heavy mutation
-- needed something better
+* do a request, its in the cache
+* one part of the cache is updated,
+* all components which are querying that part of the cache will be updated
+
+</Notes>
+
+---
+
+Network Cache === Local State Cache
+
+<Notes>
+
+* this is where apollo local state comes in
+* instead of bringing in another state management library like Redux so the Apollo cache can be a single source of truth.
+* meaning your network cache is the same exact thing as your local state cache
+
+</Notes>
+
+---
+
+My Pros & My Cons
+
+<Notes>
+
+* lets go into apollo local states pros and cons
+* these are the big ones from my experience
+* are some more on both sides that i dont mention
+* my talk so I get to talk about what I want
 
 </Notes>
 
@@ -140,11 +126,8 @@ It's GraphQL
 
 pro:
 
-* All the benefits of GraphQL
-  * strongly typed data model
-* very easy to adopt for apollo client users
-  * judging by stats, probably lots of you
-- Actions are performed with mutations, something that previous GraphQL users already understand
+* Actions and data manipulations upon the local state cache are performed with mutations,
+something that previous GraphQL users already understand
 
 </Notes>
 
@@ -152,79 +135,17 @@ pro:
 
 # Pro
 
-Apollo
+It's Apollo Client
 
 <Notes>
 
--  almost zero extra config if already using apollo client
+- almost zero extra config if already using apollo client
+- very similar to how you query/mutate remote data
 - Staying within the Apollo ecosystem meant smooth integration with existing tools, meaning less overhead for developers.
+- same api to query and mutate data
+- apollo dev tools
 
 </Notes>
-
----
-
-# Pro
-
-Queries
-
-<Notes>
-
-* components only ask for the data they need
-  * queries!
-
-</Notes>
-
----
-
-# Pro
-
-A lot less code
-
-<Notes>
-
-* store structure shared between data fetching cache and local state cache
-  * [a lot less work for you](https://blog.apollographql.com/reducing-our-redux-code-with-react-apollo-5091b9de9c2a)
-
-</Notes>
-
----
-
-# Pro
-
-Funded 💰
-
-<Notes>
-
-funded project (apollo) means docs, support and plenty of eyes on the projects
-
-</Notes>
-
----
-
-# Con
-
-Quantity of Mutations
-
-<Notes>
-
-- making many many mutations sucks super hard
-- show boilerplate heavy mutation
-
-</Notes>
-
----
-
-# Con
-
-Usage
-
-<Notes>
-
-- wont find a lot of stack over flow questions
-- maybe thats because it uses so much of apollo cache already?
-
-</Notes>
-
 
 ---
 
@@ -237,32 +158,31 @@ Boilerplate / Dev Experience
 - could be much better
 - part of the reason why I am giving this talk
 - want it to get better as I had such a good experience
+- when comparing the dev tools to something like redux, its less feature heavy
 
 </Notes>
 
 ---
 
-pattern
+<Image src="./images/issuenameinput.png">
+
+Example
+
+</Image>
 
 <Notes>
 
-* ideally you want to make your actions one-to-one with user actions
-* Easy to reason
-* Makes them small
+* here is a simple example of editing a github issue name
+* some remote data that is already in the cache
+* didnt use too much for client only data
 
 </Notes>
-
----
-
-Actions are 1-1 with user interactions
 
 ---
 
 <CodeSurfer>
 
-```graphql title="Define client-side schema"
-# clientOnly.graphql
-
+```graphql title="Define client-side schema" subtitle="clientOnly.graphql"
 extend type Mutation {
   # A mutation which edits the name on a Github Issue.
   editGithubIssue(input: EditGithubIssueInput!): Boolean
@@ -274,21 +194,8 @@ input EditGithubIssueInput {
 }
 ```
 
-```jsx 7:10 title="Define the fragment"
-import React from "react";
+```jsx 2,7:14 title="Use the mutation" subtitle="IssueInput.tsx"
 
-import { GithubIssuePiece } from './graphql-types'
-import { UPDATE_ISSUE_NAME } from './mutations/updateIssuename';
-
-const GITHUB_ISSUE_FRAGMENT = gql`
-  fragment GithubIssuePiece on GithubIssue {
-    id @client
-    name @client
-  }
-`
-```
-
-```jsx 2,7:14 title="Use the mutation"
 const IssueInput: React.FC<{ issue: GithubIssuePiece }> = ({ issue }) => {
   const updateIssuename = useMutation(UPDATE_ISSUE_NAME);
   return (
@@ -305,45 +212,41 @@ const IssueInput: React.FC<{ issue: GithubIssuePiece }> = ({ issue }) => {
         });
       }}
     />
+    <button>Save</button>
+    <button>Cancel</button>
   );
 };
+
 ```
 
 </CodeSurfer>
 
 <Notes>
 
+* define the mutation schema
+* this looks similar to a graphql api schema
+
+* use enters new value in the input
+* client side mutation is run
+* updates the cache
+* which makes the queries on issue name run again
+* thus updating all parts of your app where issue name is
+* TODO: insert diagram
 
 </Notes>
-
----
-
-Same Apollo Client logic
-
-Components will be updated
-
-<Notes>
-
-
-
-</Notes>
-
----
-
-Okay, but what about the mutation resolver definition?
 
 ---
 
 
 <CodeSurfer>
 
-```ts file=./mutations/updateIssueName.ts subtitle="It's pretty big"
+```ts file=./mutations/updateIssueName.ts title="the mutation resolver" subtitle="It's pretty big"
 ```
 
-```diff 11:15 subtitle="define local mutation"
+```diff 11:15 subtitle="Define local mutation"
 ```
 
-```diff 37:41 subtitle="Get the id of the object in the cache"
+```diff 17:24 subtitle="Define fragment"
 ```
 
 ```diff 44:48 subtitle="Get the data from the cache"
@@ -367,17 +270,30 @@ Okay, but what about the mutation resolver definition?
 
 ---
 
-insert wut image
+<Image src="https://media.giphy.com/media/11tKP5jvSJdLXi/giphy.gif" height="50%" width="50%" />
+
+<Notes>
+
+* This was not as bad in redux
+* Not much boilerplate
+* Was easy to test
+* in redux, you defined an action and wrote the resolver which:
+  * was usually small 
+  * easily testable
+
+</Notes>
 
 ---
 
 Problems
 
+* Liberal
 * Boilerplate
 * Testing
 
 <Notes>
 
+* way too much code which could go wrong or devs forgetting to do things
 * lots of boilerplate and testing was not easy, very terse and prone to error
   * way too much code for such small manipulations to data
 * to test this you need a fake store and perform fake mutation on it
@@ -388,36 +304,76 @@ Problems
 
 ---
 
-this was not as bad in redux
+Solution after many mutations written...
 
-why?
+<Notes>
 
----
+* what we came up with which made the whole process a lot more simple
 
-Let's take some inspiration
-
-* reducers are pure functions
-* always write data back in the same structure as you read it
-* already doing small actions
+</Notes>
 
 ---
 
-how can we apply this
+
+After some thinking...
+
+<Notes>
+
+* there are some patterns here which are starting to appear
+
+</Notes>
 
 ---
 
-we are only doing 4 things here:
+<Split>
 
-* Get the id
-* Get the data from the cache
-* Update the data locally
-* Write the data back to the cache
+<CodeSurfer>
+
+```ts file=./mutations/updateIssueName.ts 43:48,59:65
+```
+
+</CodeSurfer>
+
+Redux gave you back the entire cache
+
+<Notes>
+
+</Notes>
+
+</Split>
+
+---
+
+<Split>
+
+<CodeSurfer>
+
+```ts file=./mutations/updateIssueName.ts 53:57
+```
+
+</CodeSurfer>
+
+Pure reducer function
+
+</Split>
 
 ---
 
 <CodeSurfer>
 
-```ts file=./common/createResolver.ts
+```ts file=./common/createResolver.ts title="The generator"
+```
+
+```diff 10:26
+```
+
+```diff 42:46 subtitle="Get the data from the cache"
+```
+
+```diff 53 subtitle="Update the data"
+```
+
+```diff 56:61 subtitle="Write the data to the cache"
 ```
 
 </CodeSurfer>
@@ -429,11 +385,31 @@ we are only doing 4 things here:
 ```ts title="Lets go back to our issue mutation" file=./mutations/newUpdateIssueName.ts
 ```
 
+```diff 10:17 subtitle="still have the fragment"
+```
+
+```diff 19:25 subtitle="the new reducer function"
+```
+
+```diff 27:34 subtitle="export the right config"
+```
+
 </CodeSurfer>
 
 ---
 
 With this new set of utility function, it covered about 90% of our use cases.
+
+<Notes>
+
+* assumption you are writing data in the same format you read it
+* way less chance for mess ups
+* which was almost always the case
+* more complex mutations that need data from elsewhere can opt-out
+* became an even better experience
+* very easy to test these reducers
+
+</Notes>
 
 ---
 
@@ -442,16 +418,10 @@ recap
 * chose to invest heavily in apollo local state for a complicated flow editor - type app
 * saw problems in apollo local state which required tweaking
 * used inspiration from redux to make apollo local state experience much better
-  * was really just functional principles such as
-    * pure funcs
-    * reducer funcs
 
 ---
 
-[Hugh Wilson of the Apollo team has said they are looking to improve it.](https://spectrum.chat/apollo/apollo-link-state/apollo-link-state-vs-redux-vs-react-hooks-context~dcb1118c-8819-4593-8b22-040229ed4282?m=MTU1MTM3ODkzNjcxNg==)
-
-
-Maybe one day I'll make a pr to get this sort of feature in who knows.
+[Looking to improve it.](https://spectrum.chat/apollo/apollo-link-state/apollo-link-state-vs-redux-vs-react-hooks-context~dcb1118c-8819-4593-8b22-040229ed4282?m=MTU1MTM3ODkzNjcxNg==)
 
 ---
 

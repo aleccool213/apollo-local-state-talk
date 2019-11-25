@@ -1,13 +1,18 @@
-const fragment = gql`
+import gql from "graphql-tag";
+
+import { ISSUE_PARTS } from "../issues";
+import {
+  IssueParts,
+  UpdateIssueNameInput,
+} from "../../graphql-types";
+import { createResolver } from './createResolver';
+
+const ISSUE_FRAGMENT = gql`
   ${ISSUE_PARTS}
-  fragment BasicIssueParts on BasicIssue {
-    ... on Node {
-      id
-    }
-    parameters {
-      id
-      value
-    }
+
+  fragment IssueParts on Issue {
+    id @client
+    name @client
   }
 `;
 
@@ -21,7 +26,7 @@ export const reducer = (
 
 export default createResolver(
   reducer,
-  fragment,
+  fragment: ISSUE_FRAGMENT,
   "IssueParts",
   (input: UpdateIssueNameInput) => {
     return input.id;

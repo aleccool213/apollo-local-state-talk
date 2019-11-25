@@ -49,8 +49,10 @@ export const createResolver = <InputShape, EntityType>(
       return null;
     }
 
+    // 3. Update the data
     const newEntity: EntityType = reducer(entity, input);
 
+    // 4. Write the data to the cache
     cache.writeFragment({
       fragment,
       fragmentName,

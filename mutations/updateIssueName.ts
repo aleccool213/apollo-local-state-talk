@@ -18,8 +18,8 @@ const ISSUE_FRAGMENT = gql`
   ${ISSUE_PARTS}
 
   fragment IssueParts on Issue {
-    id
-    name
+    id @client
+    name @client
   }
 `;
 
