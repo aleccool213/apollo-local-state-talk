@@ -12,6 +12,10 @@ export const theme = nightOwl;
 
 ### Software dev @ Yolk AI
 
+#### Frontend ~ 3 years
+
+#### Apollo Local State ~ 1 year
+
 <Notes>
 
 * i.t. automation, e.g. chatbot, intranet
@@ -20,23 +24,7 @@ export const theme = nightOwl;
 
 ---
 
-Frontend developer for three years
-
-Apollo Local State for a year
-
-<Notes>
-
-- yolk ai all apps using it
-- been amazing
-- really love it
-- passionate about it
-- very excited and feel lucky to work on it everyday
-
-</Notes>
-
----
-
-What this talk is
+## What this talk is
 
 * What/Why Apollo Local State 🤔
 * My experience 😃
@@ -70,7 +58,7 @@ What this talk is
 
 ---
 
-Apollo Client
+## Apollo Client
 
 * Pre-req to Apollo Local State
 * Query and Mutate Remote Data from a GraphQL API
@@ -88,7 +76,7 @@ Apollo Client
 
 ---
 
-Network Cache
+### Network Cache
 
 <Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574273795/apollo-state-talk/1_CbevjJN6IQBk7gbh38V-2g.png" height="70%" width="70%" />
 
@@ -102,7 +90,7 @@ Network Cache
 
 ---
 
-Network Cache === Local State Cache
+Network Cache === <strong>Local State Cache</strong>
 
 <Notes>
 
@@ -116,7 +104,13 @@ Network Cache === Local State Cache
 
 ---
 
-My Pros & My Cons
+## My Experience
+
+A-
+
+---
+
+## My Pros & My Cons
 
 <Notes>
 
@@ -137,9 +131,10 @@ It's GraphQL
 
 pro:
 
-* Actions and data manipulations upon the local state cache are performed with mutations,
+* data manipulations upon the local state cache are performed with mutations,
 something that previous GraphQL users already understand
 * fragments
+* lingo is the same
 
 </Notes>
 
@@ -151,10 +146,10 @@ It's Apollo Client
 
 <Notes>
 
+- funded company
+- Staying within the Apollo ecosystem meant smooth integration with existing tools, meaning less overhead for developers.
 - almost zero extra config if already using apollo client
 - very similar to how you query/mutate remote data
-- Staying within the Apollo ecosystem meant smooth integration with existing tools, meaning less overhead for developers.
-- same api to query and mutate data
 - apollo dev tools
 
 </Notes>
@@ -163,21 +158,22 @@ It's Apollo Client
 
 # Con
 
-Boilerplate / Dev Experience
+Boilerplate
 
 <Notes>
 
-- could be much better
-- part of the reason why I am giving this talk
-- want it to get better as I had such a good experience
-- when comparing the dev tools to something like redux, its less feature heavy
+- polluting your codebase
 - because one action per reducer, means mutations can have a lot of code
 
 </Notes>
 
 ---
 
-Example 
+Let's do an example 🏫
+
+---
+
+E.g. Editing a Github Issue name 🖊️
 
 <Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574737880/apollo-state-talk/issuenameinput.png" height="25%" width="90%" />
 
@@ -186,6 +182,37 @@ Example
 * here is a simple example of editing a github issue name
 * some remote data that is already in the cache
 * didnt use too much for client only data
+
+</Notes>
+
+---
+
+<CodeSurfer>
+
+```jsx file=./components/IssueInput.tsx title="Example React Component" subtitle="IssueInput.tsx"
+```
+
+```diff 12,15:26 subtitle="Use the mutation"
+```
+
+```diff 3:7 subtitle="Define the mutation"
+```
+
+```diff 5[36:43]
+```
+
+</CodeSurfer>
+
+<Notes>
+
+* define the mutation 
+* looks similar to remote grapqhl api mutation
+
+* use enters new value in the input
+* client side mutation is run
+* updates the cache
+* which makes the queries on issue name run again
+* thus updating all parts of your app where issue name is
 
 </Notes>
 
@@ -213,51 +240,17 @@ input EditGithubIssueInput {
 <Notes>
 
 * very familar to people who have worked with graphql apis
-* notice the extend statement
+* notice the extend statement on the type from the server type
 * apollo client will merge the schemas
 
 </Notes>
 
 ---
 
-<CodeSurfer>
-
-```jsx file=./components/IssueInput.tsx title="Example React Component" subtitle="IssueInput.tsx"
-```
-
-```diff 3:7 subtitle="Define the mutation"
-```
-
-```diff 12,15:26 subtitle="Use the mutation"
-```
-
-</CodeSurfer>
-
-<Notes>
-
-* define the mutation schema
-* this looks similar to a graphql api schema
-
-* use enters new value in the input
-* client side mutation is run
-* updates the cache
-* which makes the queries on issue name run again
-* thus updating all parts of your app where issue name is
-
-</Notes>
-
----
-
 
 <CodeSurfer>
 
-```ts file=./mutations/updateIssueName.ts title="the mutation resolver" subtitle="It's pretty big"
-```
-
-```diff 11:15 subtitle="Define local mutation"
-```
-
-```diff 13[36:42] subtitle="new directive"
+```ts file=./mutations/updateIssueName.ts title="next, the resolver"
 ```
 
 ```diff 17:24 subtitle="Define fragment"
@@ -276,6 +269,7 @@ input EditGithubIssueInput {
 
 <Notes>
 
+* next the resolver which handles actually mutating the cache data
 * Goes to show the dev experience here is lacking
 * this is how to do it, straight from the docs
 * Ts makes this worse but I havent wrote regular JS in almost two years
@@ -288,6 +282,7 @@ input EditGithubIssueInput {
 
 <Notes>
 
+* just like ellen, i was disgusted
 * repeat this for every mutation
 * This was not as bad in redux
 * Not much boilerplate
@@ -300,7 +295,7 @@ input EditGithubIssueInput {
 
 ---
 
-Problems
+## 🔴 Problems 🔴
 
 * Boilerplate
 * Testing
@@ -322,6 +317,7 @@ After some 🤔 and many mutations ✍️ ...
 <Notes>
 
 * what we came up with which made the whole process a lot more simple
+* we started to see some patterns
 
 </Notes>
 
@@ -358,6 +354,10 @@ The 💰 of GraphQL
 Isn't this part familar 🤔
 
 </Split>
+
+---
+
+* insert image of hot new-ness
 
 ---
 
