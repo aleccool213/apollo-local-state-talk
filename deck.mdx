@@ -4,11 +4,9 @@ import {
   Step,
 } from "code-surfer";
 
-import { github, vsDark } from "@code-surfer/themes";
+import { github, nightOwl } from "@code-surfer/themes";
 
-export const theme = vsDark;
-
-# Intro
+export const theme = nightOwl;
 
 ### Alec Brunelle
 
@@ -38,11 +36,20 @@ Apollo Local State for a year
 
 ---
 
-<Image src="https://ludiq.io/assets/images/Flow-New.png" width="75%" height="75%" />
+What this talk is
+
+* What/Why Apollo Local State 🤔
+* My experience 😃
+* My Pros and Cons ⚔️
+* A solution for the Cons ☀️
+
+---
+
+<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574739802/apollo-state-talk/Flow-New.png" width="75%" height="75%" />
 
 <Notes>
 
-- I am sure all you front end developers have seen this before
+- implemting a ui like this is tough, this is where apollo link state usually comes in
 - complex single page apps which have a combination of remote data and local data are a great candidate for ALS
     - e.g. a flow editor (it was ours in that case), a multi-page form,
     - graphql api Data
@@ -50,7 +57,6 @@ Apollo Local State for a year
 - difficult problem but many many solutions
   - e.g. redux, react state/context, flux
   - apollo local state is one of those solutions
-- today I am going to tell you my experience with apollo local state
 
 - TODO: maybe talk about react state
 - can use React State for a lot of interactions
@@ -66,12 +72,13 @@ Apollo Local State for a year
 
 Apollo Client
 
-* Query and Mutate Remote Data
-* A Cache with different fetch policies
+* Pre-req to Apollo Local State
+* Query and Mutate Remote Data from a GraphQL API
+* A Network Cache
 
 <Notes>
 
-- you are likely already usig graphql and also using apollo client if you are building a frontend
+- if you are building a frontend you are likely already usig graphql and also using apollo client
 - apollo client lets you query and mutate remote data on a graphql api
 - has a built-in cache which has enables some pretty awesome features
   * e.g. blah blah blah
@@ -82,6 +89,8 @@ Apollo Client
 ---
 
 Network Cache
+
+<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574273795/apollo-state-talk/1_CbevjJN6IQBk7gbh38V-2g.png" height="70%" width="70%" />
 
 <Notes>
 
@@ -98,6 +107,8 @@ Network Cache === Local State Cache
 <Notes>
 
 * this is where apollo local state comes in
+* instead of duplicating the cache/store where your client side state will live
+  * might as well use the same one amirite
 * instead of bringing in another state management library like Redux so the Apollo cache can be a single source of truth.
 * meaning your network cache is the same exact thing as your local state cache
 
@@ -128,6 +139,7 @@ pro:
 
 * Actions and data manipulations upon the local state cache are performed with mutations,
 something that previous GraphQL users already understand
+* fragments
 
 </Notes>
 
@@ -159,16 +171,15 @@ Boilerplate / Dev Experience
 - part of the reason why I am giving this talk
 - want it to get better as I had such a good experience
 - when comparing the dev tools to something like redux, its less feature heavy
+- because one action per reducer, means mutations can have a lot of code
 
 </Notes>
 
 ---
 
-<Image src="./images/issuenameinput.png">
+Example 
 
-Example
-
-</Image>
+<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574737880/apollo-state-talk/issuenameinput.png" height="25%" width="90%" />
 
 <Notes>
 
@@ -194,29 +205,30 @@ input EditGithubIssueInput {
 }
 ```
 
-```jsx 2,7:14 title="Use the mutation" subtitle="IssueInput.tsx"
+```diff 1[1:6] title="Apollo Client will merge the schemas"
+```
 
-const IssueInput: React.FC<{ issue: GithubIssuePiece }> = ({ issue }) => {
-  const updateIssuename = useMutation(UPDATE_ISSUE_NAME);
-  return (
-    <input
-      value={issue.name}
-      onChange={newInputValue => {
-        updateIssuename({
-          variables: {
-            input: {
-              id: issue.id,
-              name: newInputValue
-            }
-          }
-        });
-      }}
-    />
-    <button>Save</button>
-    <button>Cancel</button>
-  );
-};
+</CodeSurfer>
 
+<Notes>
+
+* very familar to people who have worked with graphql apis
+* notice the extend statement
+* apollo client will merge the schemas
+
+</Notes>
+
+---
+
+<CodeSurfer>
+
+```jsx file=./components/IssueInput.tsx title="Example React Component" subtitle="IssueInput.tsx"
+```
+
+```diff 3:7 subtitle="Define the mutation"
+```
+
+```diff 12,15:26 subtitle="Use the mutation"
 ```
 
 </CodeSurfer>
@@ -231,7 +243,6 @@ const IssueInput: React.FC<{ issue: GithubIssuePiece }> = ({ issue }) => {
 * updates the cache
 * which makes the queries on issue name run again
 * thus updating all parts of your app where issue name is
-* TODO: insert diagram
 
 </Notes>
 
@@ -246,16 +257,19 @@ const IssueInput: React.FC<{ issue: GithubIssuePiece }> = ({ issue }) => {
 ```diff 11:15 subtitle="Define local mutation"
 ```
 
+```diff 13[36:42] subtitle="new directive"
+```
+
 ```diff 17:24 subtitle="Define fragment"
 ```
 
-```diff 44:48 subtitle="Get the data from the cache"
+```diff 42:46 subtitle="Get the data from the cache"
 ```
 
-```diff 54:57 subtitle="Update the data"
+```diff 51:54 subtitle="Update the data"
 ```
 
-```diff 60:65 subtitle="Write the data to the cache"
+```diff 56:61 subtitle="Write the data to the cache"
 ```
 
 </CodeSurfer>
@@ -274,6 +288,7 @@ const IssueInput: React.FC<{ issue: GithubIssuePiece }> = ({ issue }) => {
 
 <Notes>
 
+* repeat this for every mutation
 * This was not as bad in redux
 * Not much boilerplate
 * Was easy to test
@@ -287,15 +302,13 @@ const IssueInput: React.FC<{ issue: GithubIssuePiece }> = ({ issue }) => {
 
 Problems
 
-* Liberal
 * Boilerplate
 * Testing
 
 <Notes>
 
+- because one action per reducer, means mutations can have a lot of code
 * way too much code which could go wrong or devs forgetting to do things
-* lots of boilerplate and testing was not easy, very terse and prone to error
-  * way too much code for such small manipulations to data
 * to test this you need a fake store and perform fake mutation on it
 * hard to test
   * lots of use of external apis
@@ -304,7 +317,7 @@ Problems
 
 ---
 
-Solution after many mutations written...
+After some 🤔 and many mutations ✍️ ...
 
 <Notes>
 
@@ -314,27 +327,16 @@ Solution after many mutations written...
 
 ---
 
-
-After some thinking...
-
-<Notes>
-
-* there are some patterns here which are starting to appear
-
-</Notes>
-
----
-
 <Split>
 
 <CodeSurfer>
 
-```ts file=./mutations/updateIssueName.ts 43:48,59:65
+```ts file=./mutations/updateIssueName.ts 42:46,56:61
 ```
 
 </CodeSurfer>
 
-Redux gave you back the entire cache
+The 💰 of GraphQL
 
 <Notes>
 
@@ -348,12 +350,12 @@ Redux gave you back the entire cache
 
 <CodeSurfer>
 
-```ts file=./mutations/updateIssueName.ts 53:57
+```ts file=./mutations/updateIssueName.ts 51:54
 ```
 
 </CodeSurfer>
 
-Pure reducer function
+Isn't this part familar 🤔
 
 </Split>
 
@@ -361,50 +363,46 @@ Pure reducer function
 
 <CodeSurfer>
 
-```ts file=./common/createResolver.ts title="The generator"
+```ts title="Our new mutation resolver" file=./mutations/newUpdateIssueName.ts
 ```
 
-```diff 10:26
+```diff 10:17 subtitle="Still have the fragment"
 ```
 
-```diff 42:46 subtitle="Get the data from the cache"
+```diff 19:25 subtitle="Our new reducer function, testable!"
+```
+
+```diff 27:34 subtitle="run the generator"
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```ts file=./resolvers/createResolver.ts title="The generator"
+```
+
+```diff 18:25
+```
+
+```diff 42:46,56:61 subtitle="Read/Write data to the cache"
 ```
 
 ```diff 53 subtitle="Update the data"
 ```
 
-```diff 56:61 subtitle="Write the data to the cache"
-```
-
 </CodeSurfer>
 
 ---
 
-<CodeSurfer>
-
-```ts title="Lets go back to our issue mutation" file=./mutations/newUpdateIssueName.ts
-```
-
-```diff 10:17 subtitle="still have the fragment"
-```
-
-```diff 19:25 subtitle="the new reducer function"
-```
-
-```diff 27:34 subtitle="export the right config"
-```
-
-</CodeSurfer>
-
----
-
-With this new set of utility function, it covered about 90% of our use cases.
+With this new utility function, it covered about 90% of our use cases.
 
 <Notes>
 
 * assumption you are writing data in the same format you read it
 * way less chance for mess ups
-* which was almost always the case
 * more complex mutations that need data from elsewhere can opt-out
 * became an even better experience
 * very easy to test these reducers
@@ -413,26 +411,24 @@ With this new set of utility function, it covered about 90% of our use cases.
 
 ---
 
-recap
+Recap 📚
 
-* chose to invest heavily in apollo local state for a complicated flow editor - type app
-* saw problems in apollo local state which required tweaking
-* used inspiration from redux to make apollo local state experience much better
-
----
-
-[Looking to improve it.](https://spectrum.chat/apollo/apollo-link-state/apollo-link-state-vs-redux-vs-react-hooks-context~dcb1118c-8819-4593-8b22-040229ed4282?m=MTU1MTM3ODkzNjcxNg==)
+* Learned about Apollo Local State and how it relates to Apollo Client
+* Saw problems state which required tweaking
+* Used inspiration from redux to make the experience much better
 
 ---
 
 # If you liked this:
 
-## https://blog.alec.coffee/apollo-local-state-pains/
+## 🖼️ https://talk.alec.coffee
+
+## 🔗 https://blog.alec.coffee/apollo-local-state-pains/
 
 ---
 
 # Follow Me:
 
-## [@yourboybigal](https://twitter.com/yourboybigal)
+## 🐦 [@yourboybigal](https://twitter.com/yourboybigal)
 
-## [alec@alec.coffee](mailto:alec@alec.coffee)
+## ✉️ [alec@alec.coffee](mailto:alec@alec.coffee)

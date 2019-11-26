@@ -34,13 +34,11 @@ const updateIssuename: IFieldResolver<
   const { input } = args;
   const { cache, getCacheKey } = context;
 
-  // 1. Get the id of the object in the cache using the actual issue id
   const id = getCacheKey({
     __typename: "Issue",
     id: input.id,
   });
 
-  // 2. Get the data from the cache
   const issue: IssueParts | null = cache.readFragment({
     fragment: ISSUE_FRAGMENT,
     fragmentName: "IssueParts",
@@ -50,13 +48,11 @@ const updateIssuename: IFieldResolver<
     return null;
   }
 
-  // 3. Update the data locally
   const updatedIssue = {
     ...issue,
     name: input.name,
   };
 
-  // 4. Write the data back to the cache
   cache.writeFragment({
     fragment: ISSUE_FRAGMENT,
     fragmentName: "IssueParts",
