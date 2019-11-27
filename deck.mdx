@@ -79,11 +79,12 @@ export const theme = nightOwl;
 
 ---
 
-### What if we are want to use GraphQL?
+### What if we want to use GraphQL?
 
-### What if we are want to use Apollo Client?
-
-### What if we don't want to bring in another state management library?
+<Appear>
+  <h3>What if we want to use Apollo Client?</h3>
+  <h3>Another state management library?</h3>
+</Appear>
 
 <Notes>
 
@@ -127,7 +128,7 @@ export const theme = nightOwl;
 
 ### Network Cache
 
-<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574273795/apollo-state-talk/1_CbevjJN6IQBk7gbh38V-2g.png" height="70%" width="70%" />
+<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574881631/apollo-state-talk/1_CbevjJN6IQBk7gbh38V-2g.png" height="75%" width="70%" />
 
 <Notes>
 
@@ -141,7 +142,7 @@ export const theme = nightOwl;
 
 ### Network Cache === <strong>Local State Cache</strong>
 
-<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574273795/apollo-state-talk/1_CbevjJN6IQBk7gbh38V-2g.png" height="70%" width="70%" />
+<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574881631/apollo-state-talk/1_CbevjJN6IQBk7gbh38V-2g.png" height="75%" width="70%" />
 
 <Notes>
 
@@ -225,8 +226,8 @@ something that previous GraphQL users already understand
 
 ## Dev Experience 🚂
 
-* Verbose resolvers
 * Hard to test
+* Boilerplate (e.g. resolvers)
 
 <Notes>
 
@@ -265,16 +266,16 @@ something that previous GraphQL users already understand
 
 <CodeSurfer>
 
-```jsx file=./components/IssueInput.tsx title="Example React Component" subtitle="IssueInput.tsx"
+```jsx file=./components/IssueInput.tsx subtitle="Example React Component" title="IssueInput.tsx"
 ```
 
-```diff 3:7 title="Define the mutation"
+```diff 3:7 subtitle="Define the mutation"
 ```
 
-```diff 5[36:43] title="New directive!"
+```diff 5[36:43] subtitle="New directive!"
 ```
 
-```diff 12,16:25 title="Use the mutation"
+```diff 12,16:25 subtitle="Use the mutation"
 ```
 
 </CodeSurfer>
@@ -296,7 +297,7 @@ something that previous GraphQL users already understand
 
 <CodeSurfer>
 
-```graphql title="Define client-side schema" subtitle="clientOnly.graphql"
+```graphql subtitle="Define client-side schema" title="clientOnly.graphql"
 extend type Mutation {
   # A mutation which edits the name on a Github Issue.
   editGithubIssue(input: EditGithubIssueInput!): Boolean
@@ -308,7 +309,7 @@ input EditGithubIssueInput {
 }
 ```
 
-```diff 1[1:6] title="Apollo Client will merge this schema with the remote one"
+```diff 1[1:6] subtitle="Apollo Client will merge this schema with the remote one"
 ```
 
 </CodeSurfer>
@@ -326,19 +327,22 @@ input EditGithubIssueInput {
 
 <CodeSurfer>
 
-```ts file=./mutations/updateIssueName.ts title="Next up, the resolver" subtitle="./resolvers/updateGithubIssueName.ts"
+```ts file=./mutations/updateIssueName.ts subtitle="Next up, the resolver" title="./resolvers/updateGithubIssueName.ts"
 ```
 
-```diff 11:17 title="Define fragment"
+```diff 11:17 subtitle="Define fragment"
 ```
 
-```diff 36:40,50:55 title="Get/Write the data from the cache"
+```diff 15[8:15],16[10:17] subtitle="New directive!"
 ```
 
-```diff 45:48 title="Update the data"
+```diff 36:40,50:55 subtitle="Get/Write the data from the cache"
 ```
 
-```diff 1:9,20:34,41:43,56 title="Other stuff"
+```diff 45:48 subtitle="Update the data"
+```
+
+```diff 1:9,20:34,41:43,56 subtitle="Other stuff"
 ```
 
 </CodeSurfer>
@@ -400,37 +404,21 @@ After some 🤔 and many mutations ✍️ ...
 
 ---
 
-<Split>
-
 <CodeSurfer>
 
-```ts file=./mutations/updateIssueName.ts 31:34,50:55
+```ts file=./mutations/updateIssueName.ts 31:34,50:55 subtitle="The 💰 of GraphQL"
 ```
 
 </CodeSurfer>
-
-The 💰 of GraphQL
-
-<Notes>
-
-</Notes>
-
-</Split>
 
 ---
 
-<Split>
-
 <CodeSurfer>
 
-```ts file=./mutations/updateIssueName.ts 45:48
+```ts file=./mutations/updateIssueName.ts 45:48 subtitle="Isn't this part familar 🤔"
 ```
 
 </CodeSurfer>
-
-Isn't this part familar 🤔
-
-</Split>
 
 ---
 
@@ -471,7 +459,7 @@ Isn't this part familar 🤔
 
 ---
 
-With this new utility function, it covered about 90% of our use cases.
+##### With this new utility function, it covered about 90% of our use cases.
 
 <Notes>
 
@@ -482,6 +470,14 @@ With this new utility function, it covered about 90% of our use cases.
 * very easy to test these reducers
 
 </Notes>
+
+---
+
+<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574737880/apollo-state-talk/screenshot.png" height="40%" width="90%" />
+
+---
+
+I should probably submit an RFC...
 
 ---
 
