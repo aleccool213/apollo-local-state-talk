@@ -8,12 +8,6 @@ import {
 } from "../../graphql-types";
 import { ResolverContext } from ".";
 
-export const UPDATE_ISSUE_NAME = gql`
-  mutation UpdateIssueName($input: UpdateIssueNameInput!) {
-    updateIssueName(input: $input) @client
-  }
-`;
-
 const ISSUE_FRAGMENT = gql`
   ${ISSUE_PARTS}
 

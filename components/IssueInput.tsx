@@ -23,6 +23,7 @@ export const IssueInput: React.FC<{ issue: Issue }> = ({
             },
           });
         }}
+        value={issue.name}
       />
       <button>Save</button>
       <button>Cancel</button>

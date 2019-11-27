@@ -2,6 +2,7 @@ import { Appear, Notes, Split, Image } from "mdx-deck";
 import {
   CodeSurfer,
   Step,
+  CodeSurferColumns,
 } from "code-surfer";
 
 import { github, nightOwl } from "@code-surfer/themes";
@@ -10,59 +11,107 @@ export const theme = nightOwl;
 
 ### Alec Brunelle
 
-### Software dev @ Yolk AI
-
-#### Frontend ~ 3 years
-
-#### Apollo Local State ~ 1 year
+### Senior Frontend Developer @ [Yolk AI](https://www.yolk.ai/) 🍳
 
 <Notes>
 
-* i.t. automation, e.g. chatbot, intranet
+* i.t. automation for financial institutions, e.g. chatbot, knowledge base
+* probably never had heard of us
 
 </Notes>
 
 ---
 
-## What this talk is
+#### Frontend ~ 3 years
 
-* What/Why Apollo Local State 🤔
-* My experience 😃
-* My Pros and Cons ⚔️
-* A solution for the Cons ☀️
+#### GraphQL & Apollo Local State ~ 1 year
 
 ---
 
-<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574739802/apollo-state-talk/Flow-New.png" width="75%" height="75%" />
+## Apollo Local State in 15 min ⚡︎
+
+<Appear>
+
+* What/Why Apollo Local State 🤔
+* My experience 😃
+* My pros and cons ⚔️
+* A quick-solution for the cons ☀️
+
+</Appear>
+
+---
+
+<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574823654/apollo-state-talk/download_1.jpg" width="50%" height="80%" />
 
 <Notes>
 
-- implemting a ui like this is tough, this is where apollo link state usually comes in
+* form wizard, built probably by many of you
+- prime candidate, not our flow editor
+- implemting a ui like this is tough, need state management lib
+- components need to share data
+- e.g. input something in one node here, another component needs to change
+- e.g. network calls would be expensive, user needs to do work without saving all of the time
+
 - complex single page apps which have a combination of remote data and local data are a great candidate for ALS
-    - e.g. a flow editor (it was ours in that case), a multi-page form,
-    - graphql api Data
-    - which nodes the user has edited, local data
 - difficult problem but many many solutions
   - e.g. redux, react state/context, flux
   - apollo local state is one of those solutions
 
-- TODO: maybe talk about react state
-- can use React State for a lot of interactions
-- doesnt scale well, starts to break down when multiple components need to hold state
-  * they need to know about each other
+</Notes>
 
-* using ALS for a flow editor sort of like this
-  * invested heavily in it
+---
+
+<Split>
+
+<div style="width: 90%; margin: auto;">
+
+![](https://res.cloudinary.com/dscgr6mcw/image/upload/v1574823654/apollo-state-talk/download_1.jpg)
+
+</div>
+
+<div style="width: 50%; margin: auto;">
+
+### Why use a state management library?
+
+</div>
+
+</Split>
+
+---
+
+### What if we are want to use GraphQL?
+
+### What if we are want to use Apollo Client?
+
+### What if we don't want to bring in another state management library?
+
+<Notes>
+
+* react state is very primitive
+  * doesnt work at scale
+  * great for state held within a component
+* different components need to know state of each other
+* need to be updated when another component is updated
+* in a fashionable and of course maintanable way
 
 </Notes>
+
+---
+
+## Apollo Local State! But first ...
 
 ---
 
 ## Apollo Client
 
-* Pre-req to Apollo Local State
-* Query and Mutate Remote Data from a GraphQL API
-* A Network Cache
+<Appear>
+
+  * Pre-req to Apollo Local State
+  * A GraphQL Javascript Client
+  * Query and Mutate Remote Data from a GraphQL API
+  * A Network Cache (<strong>important!</strong>)
+
+</Appear>
 
 <Notes>
 
@@ -90,7 +139,9 @@ export const theme = nightOwl;
 
 ---
 
-Network Cache === <strong>Local State Cache</strong>
+### Network Cache === <strong>Local State Cache</strong>
+
+<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574273795/apollo-state-talk/1_CbevjJN6IQBk7gbh38V-2g.png" height="70%" width="70%" />
 
 <Notes>
 
@@ -106,12 +157,6 @@ Network Cache === <strong>Local State Cache</strong>
 
 ## My Experience
 
-A-
-
----
-
-## My Pros & My Cons
-
 <Notes>
 
 * lets go into apollo local states pros and cons
@@ -123,9 +168,25 @@ A-
 
 ---
 
+<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574779728/apollo-state-talk/report-card.jpg" />
+
+---
+
+<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574779804/apollo-state-talk/report-card-apollo.jpg" />
+
+---
+
+<Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574779830/apollo-state-talk/report-card-redux.jpg" />
+
+---
+
 # Pro
 
-It's GraphQL
+## It's GraphQL ⚛️
+
+* Typesafe
+* Query/Mutations
+* Schema
 
 <Notes>
 
@@ -142,11 +203,15 @@ something that previous GraphQL users already understand
 
 # Pro
 
-It's Apollo Client
+## It's Apollo 🔮
+
+* One normalized cache
+* Funded
+* One ecosystem
 
 <Notes>
 
-- funded company
+* having one cache for both network/local is very powerful
 - Staying within the Apollo ecosystem meant smooth integration with existing tools, meaning less overhead for developers.
 - almost zero extra config if already using apollo client
 - very similar to how you query/mutate remote data
@@ -158,30 +223,41 @@ It's Apollo Client
 
 # Con
 
-Boilerplate
+## Dev Experience 🚂
+
+* Verbose resolvers
+* Hard to test
 
 <Notes>
 
-- polluting your codebase
 - because one action per reducer, means mutations can have a lot of code
+- a lot of code, means a lot of testing
 
 </Notes>
 
 ---
 
-Let's do an example 🏫
+## Let's do an example 🏫
+
+<Appear>
+  <ul>Skipping the config!</ul>
+</Appear>
 
 ---
 
-E.g. Editing a Github Issue name 🖊️
+## E.g. Editing a Github Issue name 🖊️
 
 <Image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1574737880/apollo-state-talk/issuenameinput.png" height="25%" width="90%" />
 
 <Notes>
 
-* here is a simple example of editing a github issue name
-* some remote data that is already in the cache
-* didnt use too much for client only data
+* here is am example of editing a model that may appear in the cache
+  * an issue name, in the app, github
+* this data was likely loaded from the remote graphql api at some point
+* that means it is in the cache for us to manipulate
+
+* simple example just used to make the understanding of apollo local state easier
+  * probably would use something like react-state for this
 
 </Notes>
 
@@ -192,13 +268,13 @@ E.g. Editing a Github Issue name 🖊️
 ```jsx file=./components/IssueInput.tsx title="Example React Component" subtitle="IssueInput.tsx"
 ```
 
-```diff 12,15:26 subtitle="Use the mutation"
+```diff 3:7 title="Define the mutation"
 ```
 
-```diff 3:7 subtitle="Define the mutation"
+```diff 5[36:43] title="New directive!"
 ```
 
-```diff 5[36:43]
+```diff 12,16:25 title="Use the mutation"
 ```
 
 </CodeSurfer>
@@ -232,7 +308,7 @@ input EditGithubIssueInput {
 }
 ```
 
-```diff 1[1:6] title="Apollo Client will merge the schemas"
+```diff 1[1:6] title="Apollo Client will merge this schema with the remote one"
 ```
 
 </CodeSurfer>
@@ -250,19 +326,19 @@ input EditGithubIssueInput {
 
 <CodeSurfer>
 
-```ts file=./mutations/updateIssueName.ts title="next, the resolver"
+```ts file=./mutations/updateIssueName.ts title="Next up, the resolver" subtitle="./resolvers/updateGithubIssueName.ts"
 ```
 
-```diff 17:24 subtitle="Define fragment"
+```diff 11:17 title="Define fragment"
 ```
 
-```diff 42:46 subtitle="Get the data from the cache"
+```diff 36:40,50:55 title="Get/Write the data from the cache"
 ```
 
-```diff 51:54 subtitle="Update the data"
+```diff 45:48 title="Update the data"
 ```
 
-```diff 56:61 subtitle="Write the data to the cache"
+```diff 1:9,20:34,41:43,56 title="Other stuff"
 ```
 
 </CodeSurfer>
@@ -276,7 +352,9 @@ input EditGithubIssueInput {
 
 </Notes>
 
+
 ---
+
 
 <Image src="https://media.giphy.com/media/11tKP5jvSJdLXi/giphy.gif" height="50%" width="50%" />
 
@@ -295,10 +373,9 @@ input EditGithubIssueInput {
 
 ---
 
-## 🔴 Problems 🔴
+## 🔴 The cons are starting to show 🔴
 
-* Boilerplate
-* Testing
+### And this is a simple resolver...
 
 <Notes>
 
@@ -327,7 +404,7 @@ After some 🤔 and many mutations ✍️ ...
 
 <CodeSurfer>
 
-```ts file=./mutations/updateIssueName.ts 42:46,56:61
+```ts file=./mutations/updateIssueName.ts 31:34,50:55
 ```
 
 </CodeSurfer>
@@ -346,7 +423,7 @@ The 💰 of GraphQL
 
 <CodeSurfer>
 
-```ts file=./mutations/updateIssueName.ts 51:54
+```ts file=./mutations/updateIssueName.ts 45:48
 ```
 
 </CodeSurfer>
@@ -357,7 +434,7 @@ Isn't this part familar 🤔
 
 ---
 
-* insert image of hot new-ness
+<Image src="https://media.giphy.com/media/mXz3v0UdjrNTO/giphy.gif" width="80%" height="80%" />
 
 ---
 
@@ -372,7 +449,7 @@ Isn't this part familar 🤔
 ```diff 19:25 subtitle="Our new reducer function, testable!"
 ```
 
-```diff 27:34 subtitle="run the generator"
+```diff 27:34 subtitle="run the factory function"
 ```
 
 </CodeSurfer>
@@ -381,10 +458,7 @@ Isn't this part familar 🤔
 
 <CodeSurfer>
 
-```ts file=./resolvers/createResolver.ts title="The generator"
-```
-
-```diff 18:25
+```ts file=./resolvers/createResolver.ts title="The new resolver factory"
 ```
 
 ```diff 42:46,56:61 subtitle="Read/Write data to the cache"
@@ -413,8 +487,7 @@ With this new utility function, it covered about 90% of our use cases.
 
 Recap 📚
 
-* Learned about Apollo Local State and how it relates to Apollo Client
-* Saw problems state which required tweaking
+* Learned about Apollo Local State and how it relates to GraphQL/Apollo Client
 * Used inspiration from redux to make the experience much better
 
 ---
@@ -423,7 +496,7 @@ Recap 📚
 
 ## 🖼️ https://talk.alec.coffee
 
-## 🔗 https://blog.alec.coffee/apollo-local-state-pains/
+### 🔗 https://blog.alec.coffee/apollo-local-state-pains/
 
 ---
 
