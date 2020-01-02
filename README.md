@@ -6,6 +6,8 @@
 # Apollo Local State Talk
 
 - On November 28th, 2019, I spoke at the GraphQL Toronto meetup. These are the slides for that presentation.
+- Covers the pros and cons of using it after extensive usage.
+- Also covers a bit where I go into making the worse parts easier to use.
 
 # Uses MDX Deck + Code Surfer
 
