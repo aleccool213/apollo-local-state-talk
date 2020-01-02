@@ -1,3 +1,8 @@
+<a href="https://apollotalk.alec.coffee/" target="_blank">
+  <image src="https://res.cloudinary.com/dscgr6mcw/image/upload/v1577996273/apollo-state-talk/Screenshot_at_Jan_02_15-16-55.png"/>
+  <caption>Link to slides</caption>
+</a>
+
 # Apollo Local State Talk
 
 - On November 28th, 2019, I spoke at the GraphQL Toronto meetup. These are the slides for that presentation.
